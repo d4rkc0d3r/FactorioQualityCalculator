@@ -26,7 +26,7 @@ public class QualitySettings
             }
             for (int j = i; j < itemAmounts.Length; j++)
             {
-                double skipToNextLevel = amount * ((j == itemAmounts.Length - 1) ? 0 : (j == i) ? chance : SkipChance);
+                double skipToNextLevel = amount * ((j == itemAmounts.Length - 1) ? 0 : (j == i) ? chance : QualityLevels[j].chanceModifier * SkipChance);
                 newAmounts[j] += amount - skipToNextLevel;
                 amount = skipToNextLevel;
             }
@@ -81,12 +81,12 @@ public class QualitySettings
             ("uncommon", 1, 1.0),
             ("rare", 2, 1.0),
             ("epic", 3, 1.0),
-            ("legendary", 5, 1.0)
+            ("legendary", 5, 0.0)
         ]
     };
 
-    private const double uncommonUpgradeChance = 0.1;
-    private const double upgradeChanceDecay = 0.005;
+    private const double uncommonUpgradeChance = 1.0;
+    private const double upgradeChanceDecay = 0.05;
     public static QualitySettings MyEverythingHasQualityRun = new QualitySettings
     {
         QualityLevels =
