@@ -40,10 +40,17 @@ public class Program
             { "cryo", (8, 0) }
         };
         
-        var settings = QualitySettings.MyEverythingHasQualityRun;
-        (string machineName, int moduleTier, string moduleQuality) machineSettings = ("emp", 2, "unique");
-        string targetQuality = "epic";
-        bool canUseProductivity = false;
+        #if true
+            var settings = QualitySettings.MyEverythingHasQualityRun;
+            (string machineName, int moduleTier, string moduleQuality) machineSettings = ("emp", 2, "godly");
+            string targetQuality = "godly";
+            bool canUseProductivity = true;
+        #else
+            var settings = QualitySettings.Vanilla;
+            (string machineName, int moduleTier, string moduleQuality) machineSettings = ("emp", 3, "legendary");
+            string targetQuality = "legendary";
+            bool canUseProductivity = true;
+        #endif
 
         Console.WriteLine("Quality levels:");
         for (int i = 0; i < settings.QualityLevels.Count; i++)
@@ -69,10 +76,11 @@ public class Program
             double[] itemAmounts = new double[settings.QualityLevels.Count];
             itemAmounts[0] = 1.0;
 
-            itemAmounts = settings.RollQualities(3 * modules.quality, 0 * modules.productivity, itemAmounts);  // mine coal
-            itemAmounts = settings.RollQualities(3 * modules.quality, 0 * modules.productivity, itemAmounts);  // craft plastic
-            itemAmounts = settings.RollQualities(qualityChance, productivityBonus, itemAmounts);               // craft red circuits
-            itemAmounts = settings.RollQualities(qualityChance, productivityBonus, itemAmounts);               // craft module
+            //itemAmounts = settings.RollQualities(3 * modules.quality, 0 * modules.productivity, itemAmounts);  // mine coal
+            //itemAmounts = settings.RollQualities(3 * modules.quality, 0 * modules.productivity, itemAmounts);  // craft plastic
+            //itemAmounts = settings.RollQualities(qualityChance, productivityBonus, itemAmounts);               // craft red circuits
+            //itemAmounts = settings.RollQualities(qualityChance, productivityBonus, itemAmounts);               // craft module
+            itemAmounts = settings.RollQualities(qualityChance, productivityBonus, itemAmounts); // initial craft
             for (int i = 0; i < 1000; i++)
             {
                 itemAmounts = settings.Recycle(4 * modules.quality, targetQualityIndex, itemAmounts);

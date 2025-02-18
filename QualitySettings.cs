@@ -18,17 +18,15 @@ public class QualitySettings
         for (int i = 0; i < targetLevel; i++)
         {
             double amount = itemAmounts[i] * productivity;
-            double chance = QualityLevels[i].chanceModifier * qualityChance;
-            // code can't handle greater than 100% chance right now
-            if (chance > 1.0)
-            {
-                throw new InvalidOperationException($"Chance for quality level {QualityLevels[i].name} is {chance*100:F1}%, which is greater than 100%.");
-            }
+            double subtractedAmount = 0.0;
+            double currentRollChance = 1.0;
             for (int j = i; j < itemAmounts.Length; j++)
             {
-                double skipToNextLevel = amount * ((j == itemAmounts.Length - 1) ? 0 : (j == i) ? chance : QualityLevels[j].chanceModifier * SkipChance);
-                newAmounts[j] += amount - skipToNextLevel;
-                amount = skipToNextLevel;
+                double normalizedSkipAmount = currentRollChance * QualityLevels[j].chanceModifier * ((i == j) ? qualityChance : SkipChance);
+                double clampedSkipAmount = Math.Min(1.0, normalizedSkipAmount);
+                newAmounts[j] += amount - amount * clampedSkipAmount - subtractedAmount;
+                subtractedAmount = amount - amount * clampedSkipAmount;
+                currentRollChance = normalizedSkipAmount;
             }
         }
         for (int i = targetLevel; i < itemAmounts.Length; i++)
